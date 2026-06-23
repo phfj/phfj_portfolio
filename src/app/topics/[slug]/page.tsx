@@ -24,9 +24,13 @@ export default async function TopicPage({ params }: Props) {
   const { slug } = await params;
   const topic = await getTopic(slug);
   if (!topic) return null;
+
   return (
-    <div>
-      <h1>{topic.name}</h1>
+    <div className="mx-auto max-w-5xl px-6 py-24">
+      <h1 className="text-4xl font-bold tracking-tight">{topic.name}</h1>
+      <p className="mt-3 text-lg text-[var(--muted)]">
+        All projects and posts tagged with {topic.name}.
+      </p>
     </div>
   );
 }
