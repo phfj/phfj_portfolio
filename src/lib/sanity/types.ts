@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from "@portabletext/react";
+
 export interface Topic {
   _id: string;
   name: string;
@@ -12,7 +14,7 @@ export interface Post {
   slug: { current: string };
   topics?: Topic[];
   summary?: string;
-  body?: unknown;
+  body?: PortableTextBlock[];
   coverImage?: { asset: { _ref: string } };
   publishedAt: string;
   updatedAt?: string;
@@ -30,7 +32,7 @@ export interface Project {
   category: Category;
   topics?: Topic[];
   summary?: string;
-  body?: unknown;
+  body?: PortableTextBlock[];
   coverImage?: { asset: { _ref: string } };
   liveUrl?: string;
   repoUrl?: string;

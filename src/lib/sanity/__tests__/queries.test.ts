@@ -37,12 +37,14 @@ describe("project queries", () => {
 
 describe("post queries", () => {
   it("postsQuery fetches all posts sorted by published date", () => {
-    expect(postsQuery).toBe('*[_type == "post"] | order(publishedAt desc)');
+    expect(postsQuery).toBe(
+      '*[_type == "post"] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }',
+    );
   });
 
   it("postBySlugQuery fetches a post by slug", () => {
     expect(postBySlugQuery).toBe(
-      '*[_type == "post" && slug.current == $slug][0]',
+      '*[_type == "post" && slug.current == $slug][0] { ..., topics[]->{ _id, name, slug } }',
     );
   });
 });

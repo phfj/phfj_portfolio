@@ -20,17 +20,20 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-24">
-      <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
+    <div className="mx-auto max-w-5xl px-6 py-24 md:py-28">
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        Projects
+      </h1>
       <p className="mt-3 text-lg text-[var(--muted)]">
         Software projects, open source, talks, and writing.
       </p>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <hr className="mt-8 mb-10 h-px border-0 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
           <Link
             key={project._id}
             href={`/projects/${project.slug.current}`}
-            className="group rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-colors hover:border-[var(--accent)]"
+            className="group rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-all hover:scale-[1.01] hover:border-[var(--accent)] hover:shadow-md"
           >
             <article>
               <p className="text-xs font-medium tracking-wider text-[var(--accent)] uppercase">

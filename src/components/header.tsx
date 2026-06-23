@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const navLinks = [
@@ -12,6 +13,7 @@ const navLinks = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -23,6 +25,27 @@ export function Header() {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, close]);
+
+  function isActive(href: string) {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  }
+
+  const desktopLinkClass = (href: string) =>
+    [
+      "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+      isActive(href)
+        ? "text-[var(--foreground)] underline underline-offset-4 decoration-[var(--accent)] decoration-2"
+        : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]",
+    ].join(" ");
+
+  const mobileLinkClass = (href: string) =>
+    [
+      "block rounded-lg px-3 py-3 text-base font-medium transition-colors",
+      isActive(href)
+        ? "text-[var(--foreground)] underline underline-offset-4 decoration-[var(--accent)] decoration-2"
+        : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]",
+    ].join(" ");
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-sm">
@@ -38,10 +61,7 @@ export function Header() {
         <ul className="hidden items-center gap-1 md:flex">
           {navLinks.map(({ href, label }) => (
             <li key={href}>
-              <Link
-                href={href}
-                className="rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]"
-              >
+              <Link href={href} className={desktopLinkClass(href)}>
                 {label}
               </Link>
             </li>
@@ -78,7 +98,7 @@ export function Header() {
                 <Link
                   href={href}
                   onClick={close}
-                  className="block rounded-lg px-3 py-3 text-base font-medium text-[var(--muted)] transition-colors hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]"
+                  className={mobileLinkClass(href)}
                 >
                   {label}
                 </Link>
@@ -90,7 +110,3 @@ export function Header() {
     </header>
   );
 }
-/**test */
-/**test */
-/**test */
-/**test */
