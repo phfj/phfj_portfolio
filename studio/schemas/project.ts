@@ -98,7 +98,12 @@ export const project = defineType({
       type: "object",
       fields: [
         { name: "metaTitle", title: "Meta Title", type: "string" },
-        { name: "metaDescription", title: "Meta Description", type: "text", rows: 2 },
+        {
+          name: "metaDescription",
+          title: "Meta Description",
+          type: "text",
+          rows: 2,
+        },
         { name: "socialImage", title: "Social Image", type: "image" },
       ],
     }),
