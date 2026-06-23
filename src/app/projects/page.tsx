@@ -12,21 +12,50 @@ export default async function ProjectsPage() {
 
   if (projects.length === 0) {
     return (
-      <div>
-        <h1>Projects</h1>
-        <p>No projects yet.</p>
+      <div className="mx-auto max-w-5xl px-6 py-24 text-center">
+        <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
+        <p className="mt-4 text-lg text-[var(--muted)]">No projects yet.</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <h1>Projects</h1>
-      <div>
+    <div className="mx-auto max-w-5xl px-6 py-24">
+      <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
+      <p className="mt-3 text-lg text-[var(--muted)]">
+        Software projects, open source, talks, and writing.
+      </p>
+      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((project) => (
-          <Link key={project._id} href={`/projects/${project.slug.current}`}>
+          <Link
+            key={project._id}
+            href={`/projects/${project.slug.current}`}
+            className="group rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-colors hover:border-[var(--accent)]"
+          >
             <article>
-              <h2>{project.title}</h2>
+              <p className="text-xs font-medium tracking-wider text-[var(--accent)] uppercase">
+                {project.category}
+              </p>
+              <h2 className="mt-2 text-lg font-semibold transition-colors group-hover:text-[var(--accent)]">
+                {project.title}
+              </h2>
+              {project.summary && (
+                <p className="mt-2 line-clamp-2 text-sm text-[var(--muted)]">
+                  {project.summary}
+                </p>
+              )}
+              {project.techStack && project.techStack.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  {project.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-md border border-[var(--border)] bg-[var(--background)] px-2 py-0.5 text-xs text-[var(--muted)]"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
             </article>
           </Link>
         ))}

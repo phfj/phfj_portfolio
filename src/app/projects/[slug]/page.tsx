@@ -1,4 +1,5 @@
 import { getProjects, getProject } from "@/lib/sanity/queries";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
@@ -24,9 +25,78 @@ export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return null;
+
   return (
-    <div>
-      <h1>{project.title}</h1>
+    <div className="mx-auto max-w-3xl px-6 py-24">
+      <Link
+        href="/projects"
+        className="inline-flex items-center gap-1 text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
+      >
+        &larr; Projects
+      </Link>
+
+      <article className="mt-8">
+        <p className="text-sm font-medium tracking-wider text-[var(--accent)] uppercase">
+          {project.category}
+        </p>
+        <h1 className="mt-3 text-4xl font-bold tracking-tight">
+          {project.title}
+        </h1>
+
+        {project.summary && (
+          <p className="mt-4 text-lg leading-relaxed text-[var(--muted)]">
+            {project.summary}
+          </p>
+        )}
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+            >
+              View Live
+            </a>
+          )}
+          {project.repoUrl && (
+            <a
+              href={project.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--muted-bg)]"
+            >
+              Source Code
+            </a>
+          )}
+        </div>
+
+        {project.techStack && project.techStack.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold">Tech Stack</h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {project.techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="rounded-lg border border-[var(--border)] bg-[var(--muted-bg)] px-3 py-1.5 text-sm"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {project.whatILearned && (
+          <div className="mt-8 rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6">
+            <h2 className="text-lg font-semibold">What I Learned</h2>
+            <p className="mt-2 leading-relaxed text-[var(--muted)]">
+              {project.whatILearned}
+            </p>
+          </div>
+        )}
+      </article>
     </div>
   );
 }
