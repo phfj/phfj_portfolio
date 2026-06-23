@@ -26,11 +26,14 @@ export default async function TopicPage({ params }: Props) {
   if (!topic) return null;
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-24">
-      <h1 className="text-4xl font-bold tracking-tight">{topic.name}</h1>
+    <div className="mx-auto max-w-5xl px-6 py-24 md:py-28">
+      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+        {topic.name}
+      </h1>
       <p className="mt-3 text-lg text-[var(--muted)]">
         All projects and posts tagged with {topic.name}.
       </p>
+      <hr className="mt-8 h-px border-0 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
     </div>
   );
 }

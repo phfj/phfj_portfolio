@@ -27,9 +27,11 @@ export async function getProject(slug: string): Promise<Project | null> {
   return client.fetch<Project | null>(projectBySlugQuery, { slug });
 }
 
-export const postsQuery = '*[_type == "post"] | order(publishedAt desc)';
+export const postsQuery =
+  '*[_type == "post"] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }';
 
-export const postBySlugQuery = '*[_type == "post" && slug.current == $slug][0]';
+export const postBySlugQuery =
+  '*[_type == "post" && slug.current == $slug][0] { ..., topics[]->{ _id, name, slug } }';
 
 export async function getPosts(): Promise<Post[]> {
   return client.fetch<Post[]>(postsQuery);
@@ -44,4 +46,15 @@ export const featuredProjectsQuery =
 
 export async function getFeaturedProjects(): Promise<Project[]> {
   return client.fetch<Project[]>(featuredProjectsQuery);
+}
+
+const relatedPostsQuery =
+  '*[_type == "post" && slug.current != $slug && references($topicIds)] | order(publishedAt desc)[0...3] { ..., topics[]->{ _id, name, slug } }';
+
+export async function getRelatedPosts(
+  slug: string,
+  topicIds: string[],
+): Promise<Post[]> {
+  if (topicIds.length === 0) return [];
+  return client.fetch<Post[]>(relatedPostsQuery, { slug, topicIds });
 }

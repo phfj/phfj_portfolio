@@ -1,7 +1,12 @@
-import { getPosts, getPost } from "@/lib/sanity/queries";
+import { getPosts, getPost, getRelatedPosts } from "@/lib/sanity/queries";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SubscribeForm } from "@/components/subscribe-form";
+import { PortableText } from "@/components/portable-text";
+import { PostCard } from "@/components/post-card";
+import { getReadingTime } from "@/lib/reading-time";
+import { getImageUrl } from "@/lib/sanity/image";
 
 export const dynamic = "force-static";
 
@@ -27,6 +32,11 @@ export default async function PostPage({ params }: Props) {
   const post = await getPost(slug);
   if (!post) return null;
 
+  const readingTime = getReadingTime(post.body);
+  const topicIds = post.topics?.map((t) => t._id) ?? [];
+  const relatedPosts = await getRelatedPosts(slug, topicIds);
+  const coverUrl = getImageUrl(post.coverImage, 1200);
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-24">
       <Link
@@ -37,21 +47,70 @@ export default async function PostPage({ params }: Props) {
       </Link>
 
       <article className="mt-8">
-        <time className="text-sm text-[var(--muted)]">
-          {new Date(post.publishedAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-        </time>
+        {coverUrl && (
+          <Image
+            src={coverUrl}
+            alt={post.title}
+            width={1200}
+            height={675}
+            className="mb-8 w-full rounded-xl border border-[var(--border)]"
+            priority
+          />
+        )}
+
+        <div className="flex items-center gap-3 text-sm text-[var(--muted)]">
+          <time>
+            {new Date(post.publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+          {readingTime !== null && <span>&middot; {readingTime} min read</span>}
+        </div>
+
         <h1 className="mt-2 text-4xl font-bold tracking-tight">{post.title}</h1>
+
+        {post.topics && post.topics.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {post.topics.map((topic) => (
+              <Link
+                key={topic._id}
+                href={`/topics/${topic.slug.current}`}
+                className="rounded-md border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--muted)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                {topic.name}
+              </Link>
+            ))}
+          </div>
+        )}
 
         {post.summary && (
           <p className="mt-4 text-lg leading-relaxed text-[var(--muted)]">
             {post.summary}
           </p>
         )}
+
+        {post.body && post.body.length > 0 && (
+          <div className="mt-8">
+            <PortableText value={post.body} />
+          </div>
+        )}
       </article>
+
+      {relatedPosts.length > 0 && (
+        <section className="mt-16">
+          <hr className="mb-10 border-[var(--border)]" />
+          <h2 className="text-xl font-semibold tracking-tight">
+            More from this topic
+          </h2>
+          <div className="mt-6 flex flex-col gap-4">
+            {relatedPosts.map((related) => (
+              <PostCard key={related._id} post={related} />
+            ))}
+          </div>
+        </section>
+      )}
 
       <hr className="my-12 border-[var(--border)]" />
 

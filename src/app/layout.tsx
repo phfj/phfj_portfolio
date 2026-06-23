@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   },
   description:
     "Portfolio of software development work and blog — exploring code, curiosity, and self-education.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({

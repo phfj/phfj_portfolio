@@ -1,8 +1,8 @@
 # Session
 
-**Phase:** 4
-**Active task:** Productionization — CI workflow created
-**Last compaction:** 2026-06-23
+**Feature:** rich-content-rendering
+**Active task:** All 5 waves complete
+**Last compaction:** 2026-06-24
 
 ## Trajectory
 
@@ -12,18 +12,24 @@
 - Phase 3 — Implement: complete ✓
 - Phase 4 — Productionization: complete ✓
 
-## Phase 4 Summary
+## Waves completed
 
-### CI workflow (`.github/workflows/ci.yml`)
+- Wave 1 — Rich Content Rendering ✓
+- Wave 2 — Visual Design Upgrade ✓
+- Wave 3 — Blog UX ✓
+- Wave 4 — Project Detail Richness ✓
+- Wave 5 — Social Proof & Polish ✓
 
-Two jobs:
-1. **Quality** — runs on every push/PR to `main`. Typecheck, lint, test (vitest). Must pass.
-2. **Build** — runs after quality passes. Static export build. Uploads `out/` as artifact.
+### Wave 5 Changes
+- Footer: social links (GitHub, LinkedIn, Email) with SVG icons
+- About page: social links section with icons + labels
+- Header: active nav state via `usePathname()`, accent underline on current route
+- Favicon: custom SVG ("PH" monogram, accent background) replacing Next.js defaults
+- Layout: metadata `icons.icon` pointed to `/icon.svg`
+- Removed default Next.js placeholder SVGs from `public/`
 
-### GitHub secrets needed
+###
+- Typecheck: pass ✓
+- Lint: pass ✓
+- Tests: 19/19 pass ✓
 
-| Name | Where | Value |
-|---|---|---|
-| `SANITY_API_READ_TOKEN` | Settings → Secrets → Actions | The Viewer token for `production` dataset |
-| `SANITY_PROJECT_ID` | Settings → Variables → Actions | `xj9m2761` |
-| `SANITY_DATASET` | Settings → Variables → Actions | `production` |
