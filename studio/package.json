@@ -1,0 +1,21 @@
+{
+  "name": "phfj-studio",
+  "private": true,
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sanity/code-input": "^7.1.2",
+    "sanity": "^6.1.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "styled-components": "^6"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}
