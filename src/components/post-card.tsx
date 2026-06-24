@@ -1,12 +1,13 @@
+import { memo } from "react";
 import Link from "next/link";
-import type { Post } from "@/lib/sanity/types";
 import { getReadingTime } from "@/lib/reading-time";
+import type { Post } from "@/lib/sanity/types";
 
 interface Props {
   post: Post;
 }
 
-export function PostCard({ post }: Props) {
+export const PostCard = memo(function PostCard({ post }: Props) {
   const readingTime = getReadingTime(post.body);
 
   return (
@@ -55,4 +56,4 @@ export function PostCard({ post }: Props) {
       </div>
     </article>
   );
-}
+});

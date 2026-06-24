@@ -4,6 +4,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { PortableText } from "@/components/portable-text";
 import { getImageUrl } from "@/lib/sanity/image";
+import { SITE_URL } from "@/lib/constants";
+import { getReadingTime } from "@/lib/reading-time";
 
 export const dynamic = "force-static";
 
@@ -21,7 +23,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProject(slug);
   if (!project) return { title: "Project not found" };
-  return { title: project.title };
+
+  const title = project.seo?.metaTitle ?? project.title;
+  const description =
+    project.seo?.metaDescription ?? project.summary ?? undefined;
+  const ogImage = project.seo?.socialImage
+    ? getImageUrl(project.seo.socialImage, 1200)
+    : project.coverImage
+      ? getImageUrl(project.coverImage, 1200)
+      : undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: `${SITE_URL}/projects/${slug}`,
+      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 675 }] }),
+    },
+    twitter: {
+      card: ogImage ? "summary_large_image" : "summary",
+      title,
+      description,
+      ...(ogImage && { images: [ogImage] }),
+    },
+    alternates: {
+      canonical: `${SITE_URL}/projects/${slug}`,
+    },
+  };
 }
 
 export default async function ProjectPage({ params }: Props) {
@@ -30,6 +61,7 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) return null;
 
   const coverUrl = getImageUrl(project.coverImage, 1200);
+  const readingTime = getReadingTime(project.body);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-24">
@@ -49,12 +81,26 @@ export default async function ProjectPage({ params }: Props) {
             height={675}
             className="mb-10 w-full rounded-xl border border-[var(--border)]"
             priority
+            sizes="(max-width: 768px) 100vw, 800px"
           />
         )}
 
         <p className="text-sm font-medium tracking-wider text-[var(--accent)] uppercase">
           {project.category}
         </p>
+        <div className="mt-2 flex items-center gap-3 text-sm text-[var(--muted)]">
+          {readingTime !== null && <span>{readingTime} min read</span>}
+          {readingTime !== null && project.publishedAt && <span>&middot;</span>}
+          {project.publishedAt && (
+            <time>
+              Updated{" "}
+              {new Date(project.publishedAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}
+            </time>
+          )}
+        </div>
         <h1 className="mt-3 text-4xl font-bold tracking-tight">
           {project.title}
         </h1>

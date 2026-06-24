@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SearchDialog } from "@/components/search-dialog";
+import type { SearchItem } from "@/lib/search-data";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -12,7 +14,11 @@ const navLinks = [
   { href: "/about", label: "About" },
 ];
 
-export function Header() {
+interface Props {
+  searchItems: SearchItem[];
+}
+
+export function Header({ searchItems }: Props) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -70,6 +76,7 @@ export function Header() {
         </ul>
 
         <div className="flex items-center gap-1">
+          <SearchDialog items={searchItems} />
           <ThemeToggle />
           <button
             type="button"
@@ -78,12 +85,15 @@ export function Header() {
             aria-label={open ? "Close menu" : "Open menu"}
           >
             <span
+              aria-hidden="true"
               className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
             />
             <span
+              aria-hidden="true"
               className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-opacity ${open ? "opacity-0" : ""}`}
             />
             <span
+              aria-hidden="true"
               className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
             />
           </button>

@@ -6,6 +6,22 @@ import type {
 import Image from "next/image";
 import { getImageUrl } from "@/lib/sanity/image";
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function getChildrenText(children: unknown): string {
+  if (!children) return "";
+  if (typeof children === "string") return children;
+  if (Array.isArray(children)) {
+    return children.map((c: { text?: string }) => c.text ?? "").join("");
+  }
+  return "";
+}
+
 interface Props {
   value: PortableTextBlock[];
 }
@@ -13,17 +29,26 @@ interface Props {
 const components: PortableTextComponents = {
   block: {
     h1: ({ children }) => (
-      <h1 className="mt-10 mb-4 text-3xl font-bold tracking-tight text-[var(--foreground)]">
+      <h1
+        id={slugify(getChildrenText(children))}
+        className="mt-10 mb-4 text-3xl font-bold tracking-tight text-[var(--foreground)]"
+      >
         {children}
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="mt-8 mb-3 text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+      <h2
+        id={slugify(getChildrenText(children))}
+        className="mt-8 mb-3 text-2xl font-semibold tracking-tight text-[var(--foreground)]"
+      >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mt-6 mb-2 text-xl font-semibold text-[var(--foreground)]">
+      <h3
+        id={slugify(getChildrenText(children))}
+        className="mt-6 mb-2 text-xl font-semibold text-[var(--foreground)]"
+      >
         {children}
       </h3>
     ),
@@ -47,16 +72,18 @@ const components: PortableTextComponents = {
     }: {
       value: { asset: { _ref: string }; alt?: string };
     }) => {
-      const url = getImageUrl(value, 1200);
+      const url = getImageUrl(value, 800);
       if (!url) return null;
       return (
         <figure className="my-8">
           <Image
             src={url}
             alt={value.alt ?? ""}
-            width={1200}
-            height={675}
+            width={800}
+            height={450}
             className="w-full rounded-xl border border-[var(--border)]"
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, 800px"
           />
         </figure>
       );
@@ -66,17 +93,45 @@ const components: PortableTextComponents = {
     }: {
       value: { asset: { _ref: string }; alt?: string };
     }) => {
-      const url = getImageUrl(value, 1200);
+      const url = getImageUrl(value, 800);
       if (!url) return null;
       return (
         <figure className="my-8">
           <Image
             src={url}
             alt={value.alt ?? ""}
-            width={1200}
-            height={675}
+            width={800}
+            height={450}
             className="w-full rounded-xl border border-[var(--border)]"
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, 800px"
           />
+        </figure>
+      );
+    },
+    code: ({
+      value,
+    }: {
+      value: { language?: string; code?: string; filename?: string };
+    }) => {
+      if (!value.code) return null;
+      return (
+        <figure className="my-6">
+          <div className="flex items-center justify-between rounded-t-lg border border-[var(--border)] bg-[var(--muted-bg)] px-4 py-2">
+            <span className="text-xs font-medium text-[var(--muted)]">
+              {value.language ?? "code"}
+            </span>
+            {value.filename && (
+              <span className="font-mono text-xs text-[var(--muted)]">
+                {value.filename}
+              </span>
+            )}
+          </div>
+          <pre className="overflow-x-auto rounded-b-lg border-x border-b border-[var(--border)] bg-[var(--background)] p-4">
+            <code className="font-mono text-sm leading-relaxed text-[var(--foreground)]">
+              {value.code}
+            </code>
+          </pre>
         </figure>
       );
     },

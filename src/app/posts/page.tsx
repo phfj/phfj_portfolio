@@ -2,10 +2,23 @@ import { getPosts } from "@/lib/sanity/queries";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PostCard } from "@/components/post-card";
+import { SectionDivider } from "@/components/section-divider";
+import { PaginatedSection } from "@/components/paginator";
+import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Blog",
   description: "Thoughts on software development, learning, and curiosity.",
+  openGraph: {
+    title: "Blog",
+    description: "Thoughts on software development, learning, and curiosity.",
+    url: `${SITE_URL}/posts`,
+  },
+  twitter: {
+    card: "summary",
+    title: "Blog",
+    description: "Thoughts on software development, learning, and curiosity.",
+  },
 };
 
 export default async function PostsPage() {
@@ -32,12 +45,15 @@ export default async function PostsPage() {
           RSS feed
         </Link>
       </p>
-      <hr className="mt-8 mb-10 h-px border-0 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
-      <div className="flex flex-col gap-8">
+      <SectionDivider className="mt-8 mb-10" />
+      <PaginatedSection
+        emptyMessage="No posts yet."
+        containerClassName="flex flex-col gap-8"
+      >
         {posts.map((post) => (
           <PostCard key={post._id} post={post} />
         ))}
-      </div>
+      </PaginatedSection>
     </div>
   );
 }

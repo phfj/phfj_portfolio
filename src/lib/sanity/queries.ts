@@ -58,3 +58,17 @@ export async function getRelatedPosts(
   if (topicIds.length === 0) return [];
   return client.fetch<Post[]>(relatedPostsQuery, { slug, topicIds });
 }
+
+export const postsByTopicQuery =
+  '*[_type == "post" && $topicId in topics[]._ref] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }';
+
+export const projectsByTopicQuery =
+  '*[_type == "project" && $topicId in topics[]._ref] | order(publishedAt desc)';
+
+export async function getPostsByTopic(topicId: string): Promise<Post[]> {
+  return client.fetch<Post[]>(postsByTopicQuery, { topicId });
+}
+
+export async function getProjectsByTopic(topicId: string): Promise<Project[]> {
+  return client.fetch<Project[]>(projectsByTopicQuery, { topicId });
+}
