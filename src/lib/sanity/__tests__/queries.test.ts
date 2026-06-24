@@ -23,35 +23,41 @@ describe("topic queries", () => {
 
 describe("project queries", () => {
   it("projectsQuery fetches all projects sorted by published date", () => {
-    expect(projectsQuery).toBe(
+    expect(projectsQuery).toContain(
       '*[_type == "project"] | order(publishedAt desc)',
     );
+    expect(projectsQuery).toContain('"coverImage": coverImage');
+    expect(projectsQuery).toContain('"body": body[]');
   });
 
   it("projectBySlugQuery fetches a project by slug", () => {
-    expect(projectBySlugQuery).toBe(
+    expect(projectBySlugQuery).toContain(
       '*[_type == "project" && slug.current == $slug][0]',
     );
+    expect(projectBySlugQuery).toContain('"socialImage": socialImage');
   });
 });
 
 describe("post queries", () => {
   it("postsQuery fetches all posts sorted by published date", () => {
-    expect(postsQuery).toBe(
-      '*[_type == "post"] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }',
+    expect(postsQuery).toContain(
+      '*[_type == "post"] | order(publishedAt desc)',
     );
+    expect(postsQuery).toContain('"coverImage": coverImage');
+    expect(postsQuery).toContain('"topics": topics[]->{ _id, name, slug }');
   });
 
   it("postBySlugQuery fetches a post by slug", () => {
-    expect(postBySlugQuery).toBe(
-      '*[_type == "post" && slug.current == $slug][0] { ..., topics[]->{ _id, name, slug } }',
+    expect(postBySlugQuery).toContain(
+      '*[_type == "post" && slug.current == $slug][0]',
     );
+    expect(postBySlugQuery).toContain('"body": body[]');
   });
 });
 
 describe("featuredProjectsQuery", () => {
   it("queries only featured projects sorted by date", () => {
-    expect(featuredProjectsQuery).toBe(
+    expect(featuredProjectsQuery).toContain(
       '*[_type == "project" && featured == true] | order(publishedAt desc)',
     );
   });

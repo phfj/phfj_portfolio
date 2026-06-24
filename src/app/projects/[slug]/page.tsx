@@ -3,7 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PortableText } from "@/components/portable-text";
-import { getImageUrl } from "@/lib/sanity/image";
+import {
+  buildImageUrl,
+  getImageBlurDataUrl,
+  getImageDimensions,
+  getImageUrl,
+  getScaledImageDimensions,
+} from "@/lib/sanity/image";
 import { SITE_URL } from "@/lib/constants";
 import { getReadingTime } from "@/lib/reading-time";
 
@@ -27,11 +33,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = project.seo?.metaTitle ?? project.title;
   const description =
     project.seo?.metaDescription ?? project.summary ?? undefined;
-  const ogImage = project.seo?.socialImage
-    ? getImageUrl(project.seo.socialImage, 1200)
-    : project.coverImage
-      ? getImageUrl(project.coverImage, 1200)
-      : undefined;
+  const socialImageSource = project.seo?.socialImage ?? project.coverImage;
+  const ogImage = buildImageUrl(socialImageSource, {
+    width: 1200,
+    fit: "max",
+    auto: "format",
+  });
+  const ogDimensions = getScaledImageDimensions(socialImageSource, 1200);
 
   return {
     title,
@@ -41,7 +49,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description,
       type: "article",
       url: `${SITE_URL}/projects/${slug}`,
-      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 675 }] }),
+      ...(ogImage &&
+        ogDimensions && {
+          images: [
+            {
+              url: ogImage,
+              width: ogDimensions.width,
+              height: ogDimensions.height,
+            },
+          ],
+        }),
     },
     twitter: {
       card: ogImage ? "summary_large_image" : "summary",
@@ -60,7 +77,9 @@ export default async function ProjectPage({ params }: Props) {
   const project = await getProject(slug);
   if (!project) return null;
 
-  const coverUrl = getImageUrl(project.coverImage, 1200);
+  const coverUrl = getImageUrl(project.coverImage);
+  const coverDimensions = getImageDimensions(project.coverImage);
+  const coverBlurDataUrl = getImageBlurDataUrl(project.coverImage);
   const readingTime = getReadingTime(project.body);
 
   return (
@@ -77,11 +96,13 @@ export default async function ProjectPage({ params }: Props) {
           <Image
             src={coverUrl}
             alt={project.title}
-            width={1200}
-            height={675}
+            width={coverDimensions?.width ?? 1200}
+            height={coverDimensions?.height ?? 675}
             className="mb-10 w-full rounded-xl border border-[var(--border)]"
-            priority
+            preload
             sizes="(max-width: 768px) 100vw, 800px"
+            placeholder={coverBlurDataUrl ? "blur" : "empty"}
+            blurDataURL={coverBlurDataUrl}
           />
         )}
 
