@@ -33,7 +33,7 @@ export default async function ProjectsPage() {
           <Link
             key={project._id}
             href={`/projects/${project.slug.current}`}
-            className="group rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-all hover:scale-[1.01] hover:border-[var(--accent)] hover:shadow-md"
+            className="group rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md"
           >
             <article>
               <p className="text-xs font-medium tracking-wider text-[var(--accent)] uppercase">

@@ -25,7 +25,10 @@ export default async function PostsPage() {
       <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">Blog</h1>
       <p className="mt-3 text-lg text-[var(--muted)]">
         Thoughts on software development, learning, and curiosity.{" "}
-        <Link href="/feed.xml" className="text-[var(--accent)] hover:underline">
+        <Link
+          href="/feed.xml"
+          className="text-[var(--accent)] transition-colors hover:text-[var(--accent-hover)]"
+        >
           RSS feed
         </Link>
       </p>

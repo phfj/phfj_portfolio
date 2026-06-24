@@ -61,7 +61,7 @@ export function SubscribeForm() {
       </div>
       {message && (
         <p
-          className={`text-sm ${status === "error" ? "text-red-500" : "text-[var(--accent)]"}`}
+          className={`text-sm ${status === "error" ? "text-red-500" : "text-[var(--foreground)]"}`}
         >
           {message}
         </p>

@@ -6,7 +6,7 @@
 |---|---|---|
 | Framework | Next.js v16.2.9 (App Router) | Already bootstrapped in Phase 0. App Router is the current paradigm. |
 | Language | TypeScript (strict) | Type safety across the codebase. |
-| Styling | Tailwind v4 | Utility-first CSS. Already configured. |
+| Styling | Tailwind v4 + next-themes | Utility-first CSS. Manual dark/light/system toggle with localStorage persistence. |
 | Linting | ESLint v9 (flat config) | Next.js default. Already configured. |
 | Formatting | Prettier + prettier-plugin-tailwindcss | Consistent code style. Already configured. |
 

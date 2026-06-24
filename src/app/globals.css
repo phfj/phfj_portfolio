@@ -1,31 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --background: rgb(255 255 255);
-  --foreground: rgb(23 23 23);
-  --muted: rgb(115 115 115);
-  --muted-bg: rgb(245 245 245);
-  --border: rgb(229 229 229);
-  --accent: rgb(37 99 235);
-  --accent-hover: rgb(29 78 216);
-  --accent-50: rgb(239 246 255);
-  --accent-100: rgb(219 234 254);
-  --accent-200: rgb(191 219 254);
+  --background: rgb(255 252 250);
+  --foreground: rgb(28 25 23);
+  --muted: rgb(120 105 95);
+  --muted-bg: rgb(248 245 242);
+  --border: rgb(232 225 218);
+  --accent: rgb(234 88 12);
+  --accent-hover: rgb(194 65 12);
+  --accent-50: rgb(255 247 237);
+  --accent-100: rgb(255 237 213);
+  --accent-200: rgb(254 215 170);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: rgb(15 15 15);
-    --foreground: rgb(237 237 237);
-    --muted: rgb(163 163 163);
-    --muted-bg: rgb(26 26 26);
-    --border: rgb(42 42 42);
-    --accent: rgb(59 130 246);
-    --accent-hover: rgb(96 165 250);
-    --accent-50: rgb(23 37 84);
-    --accent-100: rgb(30 58 138);
-    --accent-200: rgb(30 64 175);
-  }
+.dark {
+  --background: rgb(18 15 13);
+  --foreground: rgb(237 235 233);
+  --muted: rgb(161 148 138);
+  --muted-bg: rgb(28 25 23);
+  --border: rgb(45 40 35);
+  --accent: rgb(251 146 60);
+  --accent-hover: rgb(249 115 22);
+  --accent-50: rgb(67 29 10);
+  --accent-100: rgb(78 35 12);
+  --accent-200: rgb(89 42 14);
 }
 
 @theme inline {
@@ -51,4 +49,17 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: rgb(255 255 255);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
