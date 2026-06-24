@@ -10,7 +10,7 @@ export function PostCard({ post }: Props) {
   const readingTime = getReadingTime(post.body);
 
   return (
-    <article className="group relative rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-all hover:scale-[1.01] hover:border-[var(--accent)] hover:shadow-md">
+    <article className="group relative rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md">
       <Link
         href={`/posts/${post.slug.current}`}
         className="absolute inset-0 z-0"

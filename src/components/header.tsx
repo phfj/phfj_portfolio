@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -33,18 +34,18 @@ export function Header() {
 
   const desktopLinkClass = (href: string) =>
     [
-      "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+      "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
       isActive(href)
-        ? "text-[var(--foreground)] underline underline-offset-4 decoration-[var(--accent)] decoration-2"
+        ? "text-[var(--foreground)] after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:bg-[var(--accent)]"
         : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]",
     ].join(" ");
 
   const mobileLinkClass = (href: string) =>
     [
-      "block rounded-lg px-3 py-3 text-base font-medium transition-colors",
+      "block rounded-lg px-3 py-3 text-base font-medium transition-colors duration-200",
       isActive(href)
-        ? "text-[var(--foreground)] underline underline-offset-4 decoration-[var(--accent)] decoration-2"
-        : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]",
+        ? "bg-[var(--muted-bg)] text-[var(--foreground)] border-l-2 border-[var(--accent)]"
+        : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)] border-l-2 border-transparent",
     ].join(" ");
 
   return (
@@ -68,22 +69,25 @@ export function Header() {
           ))}
         </ul>
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="flex flex-col gap-1 rounded-lg p-2 md:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          <span
-            className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
-          />
-          <span
-            className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-opacity ${open ? "opacity-0" : ""}`}
-          />
-          <span
-            className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
-          />
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="flex flex-col gap-1 rounded-lg p-2 md:hidden"
+            aria-label={open ? "Close menu" : "Open menu"}
+          >
+            <span
+              className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "translate-y-1.5 rotate-45" : ""}`}
+            />
+            <span
+              className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-opacity ${open ? "opacity-0" : ""}`}
+            />
+            <span
+              className={`block h-0.5 w-6 rounded bg-[var(--foreground)] transition-transform ${open ? "-translate-y-1.5 -rotate-45" : ""}`}
+            />
+          </button>
+        </div>
       </nav>
 
       {open && (
