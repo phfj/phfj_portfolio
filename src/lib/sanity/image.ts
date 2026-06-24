@@ -1,14 +1,15 @@
-import { client } from "./client";
-
 interface SanityImageSource {
   asset: { _ref: string };
 }
+
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 
 export function getImageUrl(
   source: SanityImageSource | null | undefined,
   width?: number,
 ): string | null {
-  if (!source?.asset?._ref) return null;
+  if (!source?.asset?._ref || !projectId || !dataset) return null;
 
   const parts = source.asset._ref.split("-");
   if (parts.length < 4) return null;
@@ -24,5 +25,5 @@ export function getImageUrl(
     finalDims = `${width}x${Math.round(Number.parseInt(h, 10) * ratio)}`;
   }
 
-  return `https://cdn.sanity.io/images/${client.config().projectId}/${client.config().dataset}/${id}-${finalDims}.${ext}`;
+  return `https://cdn.sanity.io/images/${projectId}/${dataset}/${id}-${finalDims}.${ext}`;
 }
