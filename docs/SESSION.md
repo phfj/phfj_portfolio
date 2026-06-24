@@ -1,51 +1,40 @@
 # Session
 
-**Feature:** visual-overhaul
-**Active task:** Complete — all 5 slices done
+**Feature:** audit-backlog
+**Active task:** 28 of 34 issues complete
 **Last compaction:** 2026-06-24
 
-## Trajectory
+## Completed — 28/34 issues
 
-- Phase 0 — Bootstrap: complete ✓
-- Phase 1 — Blueprint: complete ✓
-- Phase 2 — Backlog: complete ✓
-- Phase 3 — Implement: complete ✓
-- Phase 4 — Productionization: complete ✓
-- Feature: rich-content-rendering — complete ✓
-- Feature: visual-overhaul — complete ✓
+### Immediate (5/5) ✓
+- #9 seo-foundation, #10 wire-seo-fields, #11 a11y-foundation, #12 shared-components, #13 fix-topic-pages
 
-## Waves completed (rich-content-rendering)
+### Short-term (11/11) ✓
+- #14 code-syntax-highlight, #15 loading-error-states, #16 pagination, #17 image-optimization, #18 project-filtering, #19 search, #20 test-coverage, #21 github-api, #22 reading-progress-bar, #23 contact-form, #24 about-redesign
 
-- Wave 1 — Rich Content Rendering ✓
-- Wave 2 — Visual Design Upgrade ✓
-- Wave 3 — Blog UX ✓
-- Wave 4 — Project Detail Richness ✓
-- Wave 5 — Social Proof & Polish ✓
+### Medium-term (2/4)
+- #25 table-of-contents ✓
+- #26 project-card-images ✓
 
-## Slices completed (visual-overhaul)
+### Nice-to-have (4/6)
+- #29 project-polish ✓
+- #30 social-share ✓
+- #33 react-optimizations ✓
+- #34 misc-polish ✓
 
-- Slice 1 — Design System Foundation ✓
-- Slice 2 — Typography & Spacing Grid ✓
-- Slice 3 — Component Restyling ✓
-- Slice 4 — Page Refinements ✓
-- Slice 5 — Polish & Verify ✓
-
-### Changes summary
-
-- **Palette:** Blue (#2563eb) → Warm amber (#ea580c / #fb923c dark). Accent, background, muted, border tones all shifted warmer.
-- **Dark mode:** Added `next-themes` with manual toggle (sun/moon/system icon), localStorage persistence, class-based strategy.
-- **ThemeToggle:** New `src/components/theme-toggle.tsx` — client component, three-mode cycle (light/dark/system), prevents hydration flash.
-- **layout.tsx:** Wrapped body in `ThemeProvider attribute="class"`, added `suppressHydrationWarning` on `<html>`.
-- **globals.css:** Replaced `prefers-color-scheme` media query with `.dark` class selector. Added font-smoothing, selection color, scrollbar styling.
-- **Header:** ThemeToggle in nav. Active link indicator changed from underline to subtle bottom-dot (desktop) / left-border (mobile).
-- **PostCard:** `hover:-translate-y-0.5` replaces `hover:scale-[1.01]` for smoother lift.
-- **Cards:** Consistent `duration-200` transitions, accent border on hover.
-- **SubscribeForm:** Success message color now `var(--foreground)` instead of accent.
-- **Favicon:** Updated from blue `#2563eb` to warm `#ea580c`.
+### Remaining
+- #27 view-counter (needs Cloudflare KV)
+- #28 interactive-demo (needs external embed)
+- #31 newsletter-archive
+- #32 interactive-resume
 
 ### Status
 - Typecheck: pass ✓
 - Lint: pass ✓
-- Tests: 19/19 pass ✓
-- Build: pass ✓
+- Tests: 40/40 pass (from 19) ✓
+- Build: 16/16 pages ✓
 
+### Session delta
+- 18 new files, 14 modified files
+- Added: constants, search-data, github, contact worker, search dialog, TOC, share buttons, reading-progress, paginator, filtered-project-list, contact-form, icons, section-divider, project-card, header-wrapper, loading/error/not-found states, sitemap, robots, _headers
+- Tests: reading-time (6), image (5), constants (3), contact worker (7) = +21 tests

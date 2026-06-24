@@ -1,42 +1,138 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { SITE_URL } from "@/lib/constants";
+import { SectionDivider } from "@/components/section-divider";
+import { GitHubIcon, LinkedInIcon, EmailIcon } from "@/components/icons";
+import { ContactForm } from "@/components/contact-form";
 
 export const metadata: Metadata = {
   title: "About",
   description:
     "Paul Holmes — software developer, lifelong learner, and advocate for self-education and curiosity in tech.",
+  openGraph: {
+    title: "About",
+    description:
+      "Paul Holmes — software developer, lifelong learner, and advocate for self-education and curiosity in tech.",
+    url: `${SITE_URL}/about`,
+    type: "profile",
+  },
+  twitter: {
+    card: "summary",
+    title: "About",
+    description:
+      "Paul Holmes — software developer, lifelong learner, and advocate for self-education and curiosity in tech.",
+  },
+  alternates: {
+    canonical: `${SITE_URL}/about`,
+  },
 };
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Paul Holmes",
+  url: SITE_URL,
+  jobTitle: "Software Developer",
+  sameAs: [
+    "https://github.com/phfj",
+    "https://www.linkedin.com/in/paul-holmes-10a98424a/",
+  ],
+};
+
+const techStack = [
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "Tailwind CSS",
+  "Sanity CMS",
+  "Cloudflare Workers",
+  "Git",
+  "REST APIs",
+  "GROQ",
+];
 
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-24 md:py-28">
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">About</h1>
-      <hr className="mt-6 mb-10 h-px border-0 bg-gradient-to-r from-transparent via-[var(--border)] to-transparent" />
-      <div className="space-y-5 text-lg leading-relaxed text-[var(--muted)]">
-        <p>
-          I&apos;m Paul Holmes, a software developer passionate about building
-          things, sharing what I learn, and sparking curiosity in others.
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="flex flex-col items-start gap-8 sm:flex-row">
+        <div className="shrink-0">
+          <div className="flex h-28 w-28 items-center justify-center rounded-2xl bg-[var(--accent)] text-4xl font-bold text-white">
+            PH
+          </div>
+        </div>
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            Hi, I&apos;m Paul
+          </h1>
+          <p className="mt-3 text-lg leading-relaxed text-[var(--muted)]">
+            A software developer passionate about building things, sharing what
+            I learn, and sparking curiosity in others.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/projects"
+              className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+            >
+              View my work
+            </Link>
+            <a
+              href="#contact"
+              className="rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--muted-bg)]"
+            >
+              Get in touch
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <SectionDivider className="my-12" />
+
+      <section>
+        <h2 className="text-2xl font-semibold tracking-tight">What I do</h2>
+        <p className="mt-3 leading-relaxed text-[var(--muted)]">
+          I build web applications and tools, write about software development,
+          and contribute to open source. This site is my portfolio of work and
+          my blog — a place to document my journey, explore ideas, and hopefully
+          inspire others to teach themselves and stay curious.
         </p>
-        <p>
-          This site is my portfolio of work and my blog — a place to document my
-          journey, explore ideas, and hopefully inspire others to teach
-          themselves and stay curious.
-        </p>
-        <p>
+        <p className="mt-3 leading-relaxed text-[var(--muted)]">
           I believe the best developers are self-taught, endlessly curious, and
           generous with their knowledge. That&apos;s what this site is about.
         </p>
-      </div>
+      </section>
 
-      <div className="mt-12 flex flex-wrap items-center gap-6">
+      <section className="mt-12">
+        <h2 className="text-2xl font-semibold tracking-tight">
+          Tech I work with
+        </h2>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {techStack.map((tech) => (
+            <span
+              key={tech}
+              className="rounded-lg border border-[var(--border)] bg-[var(--muted-bg)] px-3 py-1.5 text-sm text-[var(--muted)]"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </section>
+
+      <SectionDivider className="my-12" />
+
+      <section className="flex flex-wrap items-center gap-6">
         <a
           href="https://github.com/phfj"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
         >
-          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-          </svg>
+          <GitHubIcon />
           GitHub
         </a>
         <a
@@ -45,29 +141,30 @@ export default function AboutPage() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
         >
-          <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-          </svg>
+          <LinkedInIcon />
           LinkedIn
         </a>
         <a
           href="mailto:pauladrianoholmes@gmail.com"
           className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
         >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5"
-          >
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-            <polyline points="22,6 12,13 2,6" />
-          </svg>
+          <EmailIcon />
           Email
         </a>
+      </section>
+
+      <div
+        id="contact"
+        className="mt-20 scroll-mt-24 rounded-2xl border border-[var(--border)] bg-[var(--muted-bg)] p-8 md:p-10"
+      >
+        <h2 className="text-2xl font-semibold tracking-tight">Get in touch</h2>
+        <p className="mt-2 text-[var(--muted)]">
+          Have a question, project idea, or just want to chat? Send me a
+          message.
+        </p>
+        <div className="mt-6">
+          <ContactForm />
+        </div>
       </div>
     </div>
   );

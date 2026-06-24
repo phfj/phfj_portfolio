@@ -41,16 +41,22 @@ export function SubscribeForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <div className="flex gap-2">
-        <input
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          disabled={status === "loading"}
-          className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none disabled:opacity-50"
-        />
+        <div className="flex-1">
+          <label htmlFor="subscribe-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="subscribe-email"
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={status === "loading"}
+            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none disabled:opacity-50"
+          />
+        </div>
         <button
           type="submit"
           disabled={status === "loading"}
@@ -61,6 +67,8 @@ export function SubscribeForm() {
       </div>
       {message && (
         <p
+          role="status"
+          aria-live="polite"
           className={`text-sm ${status === "error" ? "text-red-500" : "text-[var(--foreground)]"}`}
         >
           {message}

@@ -1,6 +1,5 @@
-import { getPosts } from "../../lib/sanity/queries";
-
-const SITE_URL = "https://phfj.com";
+import { getPosts } from "@/lib/sanity/queries";
+import { SITE_URL } from "@/lib/constants";
 
 export const dynamic = "force-static";
 
