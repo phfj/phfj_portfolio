@@ -4,7 +4,12 @@ import type {
   PortableTextBlock,
 } from "@portabletext/react";
 import Image from "next/image";
-import { getImageUrl } from "@/lib/sanity/image";
+import {
+  getImageBlurDataUrl,
+  getImageDimensions,
+  getImageUrl,
+} from "@/lib/sanity/image";
+import type { SanityImage } from "@/lib/sanity/types";
 
 function slugify(text: string): string {
   return text
@@ -67,44 +72,44 @@ const components: PortableTextComponents = {
     ),
   },
   types: {
-    image: ({
-      value,
-    }: {
-      value: { asset: { _ref: string }; alt?: string };
-    }) => {
-      const url = getImageUrl(value, 800);
-      if (!url) return null;
+    image: ({ value }: { value: SanityImage }) => {
+      const url = getImageUrl(value);
+      const dimensions = getImageDimensions(value);
+      if (!url || !dimensions) return null;
+
       return (
         <figure className="my-8">
           <Image
             src={url}
             alt={value.alt ?? ""}
-            width={800}
-            height={450}
+            width={dimensions.width}
+            height={dimensions.height}
             className="w-full rounded-xl border border-[var(--border)]"
             loading="lazy"
             sizes="(max-width: 768px) 100vw, 800px"
+            placeholder={getImageBlurDataUrl(value) ? "blur" : "empty"}
+            blurDataURL={getImageBlurDataUrl(value)}
           />
         </figure>
       );
     },
-    mainImage: ({
-      value,
-    }: {
-      value: { asset: { _ref: string }; alt?: string };
-    }) => {
-      const url = getImageUrl(value, 800);
-      if (!url) return null;
+    mainImage: ({ value }: { value: SanityImage }) => {
+      const url = getImageUrl(value);
+      const dimensions = getImageDimensions(value);
+      if (!url || !dimensions) return null;
+
       return (
         <figure className="my-8">
           <Image
             src={url}
             alt={value.alt ?? ""}
-            width={800}
-            height={450}
+            width={dimensions.width}
+            height={dimensions.height}
             className="w-full rounded-xl border border-[var(--border)]"
             loading="lazy"
             sizes="(max-width: 768px) 100vw, 800px"
+            placeholder={getImageBlurDataUrl(value) ? "blur" : "empty"}
+            blurDataURL={getImageBlurDataUrl(value)}
           />
         </figure>
       );

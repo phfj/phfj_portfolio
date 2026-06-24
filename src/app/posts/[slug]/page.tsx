@@ -6,7 +6,13 @@ import { SubscribeForm } from "@/components/subscribe-form";
 import { PortableText } from "@/components/portable-text";
 import { PostCard } from "@/components/post-card";
 import { getReadingTime } from "@/lib/reading-time";
-import { getImageUrl } from "@/lib/sanity/image";
+import {
+  buildImageUrl,
+  getImageBlurDataUrl,
+  getImageDimensions,
+  getImageUrl,
+  getScaledImageDimensions,
+} from "@/lib/sanity/image";
 import { SITE_URL } from "@/lib/constants";
 import { ReadingProgress } from "@/components/reading-progress";
 import { TableOfContents } from "@/components/table-of-contents";
@@ -31,11 +37,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = post.seo?.metaTitle ?? post.title;
   const description = post.seo?.metaDescription ?? post.summary ?? undefined;
-  const ogImage = post.seo?.socialImage
-    ? getImageUrl(post.seo.socialImage, 1200)
-    : post.coverImage
-      ? getImageUrl(post.coverImage, 1200)
-      : undefined;
+  const socialImageSource = post.seo?.socialImage ?? post.coverImage;
+  const ogImage = buildImageUrl(socialImageSource, {
+    width: 1200,
+    fit: "max",
+    auto: "format",
+  });
+  const ogDimensions = getScaledImageDimensions(socialImageSource, 1200);
 
   return {
     title,
@@ -47,7 +55,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       url: `${SITE_URL}/posts/${slug}`,
-      ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 675 }] }),
+      ...(ogImage &&
+        ogDimensions && {
+          images: [
+            {
+              url: ogImage,
+              width: ogDimensions.width,
+              height: ogDimensions.height,
+            },
+          ],
+        }),
     },
     twitter: {
       card: ogImage ? "summary_large_image" : "summary",
@@ -69,7 +86,9 @@ export default async function PostPage({ params }: Props) {
   const readingTime = getReadingTime(post.body);
   const topicIds = post.topics?.map((t) => t._id) ?? [];
   const relatedPosts = await getRelatedPosts(slug, topicIds);
-  const coverUrl = getImageUrl(post.coverImage, 1200);
+  const coverUrl = getImageUrl(post.coverImage);
+  const coverDimensions = getImageDimensions(post.coverImage);
+  const coverBlurDataUrl = getImageBlurDataUrl(post.coverImage);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -110,11 +129,13 @@ export default async function PostPage({ params }: Props) {
               <Image
                 src={coverUrl}
                 alt={post.title}
-                width={1200}
-                height={675}
+                width={coverDimensions?.width ?? 1200}
+                height={coverDimensions?.height ?? 675}
                 className="mb-8 w-full rounded-xl border border-[var(--border)]"
-                priority
+                preload
                 sizes="(max-width: 768px) 100vw, 800px"
+                placeholder={coverBlurDataUrl ? "blur" : "empty"}
+                blurDataURL={coverBlurDataUrl}
               />
             )}
 

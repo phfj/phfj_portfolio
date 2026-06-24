@@ -8,6 +8,38 @@ export interface Topic {
 
 export type Category = "Software" | "OSS" | "Talk" | "Writing";
 
+export interface SanityImageDimensions {
+  width: number;
+  height: number;
+  aspectRatio: number;
+}
+
+export interface SanityImageAsset {
+  _ref?: string;
+  url?: string;
+  metadata?: {
+    dimensions?: SanityImageDimensions;
+    lqip?: string;
+  };
+}
+
+export interface SanityImage {
+  asset: SanityImageAsset;
+  alt?: string;
+  crop?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
+  hotspot?: {
+    x: number;
+    y: number;
+    height: number;
+    width: number;
+  };
+}
+
 export interface Post {
   _id: string;
   title: string;
@@ -15,13 +47,13 @@ export interface Post {
   topics?: Topic[];
   summary?: string;
   body?: PortableTextBlock[];
-  coverImage?: { asset: { _ref: string } };
+  coverImage?: SanityImage;
   publishedAt: string;
   updatedAt?: string;
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
-    socialImage?: { asset: { _ref: string } };
+    socialImage?: SanityImage;
   };
 }
 
@@ -33,7 +65,7 @@ export interface Project {
   topics?: Topic[];
   summary?: string;
   body?: PortableTextBlock[];
-  coverImage?: { asset: { _ref: string } };
+  coverImage?: SanityImage;
   liveUrl?: string;
   repoUrl?: string;
   featured: boolean;
@@ -43,6 +75,6 @@ export interface Project {
   seo?: {
     metaTitle?: string;
     metaDescription?: string;
-    socialImage?: { asset: { _ref: string } };
+    socialImage?: SanityImage;
   };
 }

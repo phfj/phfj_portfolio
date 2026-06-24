@@ -2,14 +2,14 @@ import { memo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Project } from "@/lib/sanity/types";
-import { getImageUrl } from "@/lib/sanity/image";
+import { getImageBlurDataUrl, getImageUrl } from "@/lib/sanity/image";
 
 interface Props {
   project: Project;
 }
 
 export const ProjectCard = memo(function ProjectCard({ project }: Props) {
-  const coverUrl = getImageUrl(project.coverImage, 600);
+  const coverUrl = getImageUrl(project.coverImage);
 
   return (
     <Link
@@ -17,15 +17,18 @@ export const ProjectCard = memo(function ProjectCard({ project }: Props) {
       className="group overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--muted-bg)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md"
     >
       {coverUrl && (
-        <div className="aspect-video w-full overflow-hidden">
+        <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={coverUrl}
             alt={project.title}
-            width={600}
-            height={340}
+            fill
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
             loading="lazy"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            placeholder={
+              getImageBlurDataUrl(project.coverImage) ? "blur" : "empty"
+            }
+            blurDataURL={getImageBlurDataUrl(project.coverImage)}
           />
         </div>
       )}

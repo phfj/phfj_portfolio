@@ -6,10 +6,51 @@ export const topicsQuery = '*[_type == "topic"]';
 export const topicBySlugQuery =
   '*[_type == "topic" && slug.current == $slug][0]';
 
-export const projectsQuery = '*[_type == "project"] | order(publishedAt desc)';
+const imageProjection = `{
+  ...,
+  asset->{
+    _id,
+    url,
+    metadata{
+      lqip,
+      dimensions{
+        width,
+        height,
+        aspectRatio
+      }
+    }
+  }
+}`;
 
-export const projectBySlugQuery =
-  '*[_type == "project" && slug.current == $slug][0]';
+const richBodyProjection = `"body": body[]{
+  ...,
+  _type == "image" => ${imageProjection}
+}`;
+
+const postProjection = `{
+  ...,
+  "coverImage": coverImage${imageProjection},
+  "seo": seo{
+    ...,
+    "socialImage": socialImage${imageProjection}
+  },
+  ${richBodyProjection},
+  "topics": topics[]->{ _id, name, slug }
+}`;
+
+const projectProjection = `{
+  ...,
+  "coverImage": coverImage${imageProjection},
+  "seo": seo{
+    ...,
+    "socialImage": socialImage${imageProjection}
+  },
+  ${richBodyProjection}
+}`;
+
+export const projectsQuery = `*[_type == "project"] | order(publishedAt desc) ${projectProjection}`;
+
+export const projectBySlugQuery = `*[_type == "project" && slug.current == $slug][0] ${projectProjection}`;
 
 export async function getTopics(): Promise<Topic[]> {
   return client.fetch<Topic[]>(topicsQuery);
@@ -27,11 +68,9 @@ export async function getProject(slug: string): Promise<Project | null> {
   return client.fetch<Project | null>(projectBySlugQuery, { slug });
 }
 
-export const postsQuery =
-  '*[_type == "post"] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }';
+export const postsQuery = `*[_type == "post"] | order(publishedAt desc) ${postProjection}`;
 
-export const postBySlugQuery =
-  '*[_type == "post" && slug.current == $slug][0] { ..., topics[]->{ _id, name, slug } }';
+export const postBySlugQuery = `*[_type == "post" && slug.current == $slug][0] ${postProjection}`;
 
 export async function getPosts(): Promise<Post[]> {
   return client.fetch<Post[]>(postsQuery);
@@ -41,15 +80,13 @@ export async function getPost(slug: string): Promise<Post | null> {
   return client.fetch<Post | null>(postBySlugQuery, { slug });
 }
 
-export const featuredProjectsQuery =
-  '*[_type == "project" && featured == true] | order(publishedAt desc)';
+export const featuredProjectsQuery = `*[_type == "project" && featured == true] | order(publishedAt desc) ${projectProjection}`;
 
 export async function getFeaturedProjects(): Promise<Project[]> {
   return client.fetch<Project[]>(featuredProjectsQuery);
 }
 
-const relatedPostsQuery =
-  '*[_type == "post" && slug.current != $slug && references($topicIds)] | order(publishedAt desc)[0...3] { ..., topics[]->{ _id, name, slug } }';
+const relatedPostsQuery = `*[_type == "post" && slug.current != $slug && references($topicIds)] | order(publishedAt desc)[0...3] ${postProjection}`;
 
 export async function getRelatedPosts(
   slug: string,
@@ -59,11 +96,9 @@ export async function getRelatedPosts(
   return client.fetch<Post[]>(relatedPostsQuery, { slug, topicIds });
 }
 
-export const postsByTopicQuery =
-  '*[_type == "post" && $topicId in topics[]._ref] | order(publishedAt desc) { ..., topics[]->{ _id, name, slug } }';
+export const postsByTopicQuery = `*[_type == "post" && $topicId in topics[]._ref] | order(publishedAt desc) ${postProjection}`;
 
-export const projectsByTopicQuery =
-  '*[_type == "project" && $topicId in topics[]._ref] | order(publishedAt desc)';
+export const projectsByTopicQuery = `*[_type == "project" && $topicId in topics[]._ref] | order(publishedAt desc) ${projectProjection}`;
 
 export async function getPostsByTopic(topicId: string): Promise<Post[]> {
   return client.fetch<Post[]>(postsByTopicQuery, { topicId });
