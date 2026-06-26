@@ -78,3 +78,17 @@ export interface Project {
     socialImage?: SanityImage;
   };
 }
+
+export interface TimelineEvent {
+  _id: string;
+  type: "work" | "education" | "project" | "writing";
+  title: string;
+  organization: string;
+  startDate: string; // YYYY-MM
+  endDate?: string | null; // YYYY-MM, or null/undefined for Present
+  description: string;
+  skills: string[];
+  links?: { label: string; url: string }[];
+  projectRef?: { _ref: string; _type: "reference" };
+  postRef?: { _ref: string; _type: "reference" };
+}

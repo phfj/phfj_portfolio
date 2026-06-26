@@ -1,5 +1,5 @@
 import { client } from "./client";
-import type { Topic, Project, Post } from "./types";
+import type { Topic, Project, Post, TimelineEvent } from "./types";
 
 export const topicsQuery = '*[_type == "topic"]';
 
@@ -106,4 +106,61 @@ export async function getPostsByTopic(topicId: string): Promise<Post[]> {
 
 export async function getProjectsByTopic(topicId: string): Promise<Project[]> {
   return client.fetch<Project[]>(projectsByTopicQuery, { topicId });
+}
+
+export const timelineEventsQuery = `*[_type == "timelineEvent"] | order(startDate desc)`;
+
+export async function getTimelineEvents(): Promise<TimelineEvent[]> {
+  return client.fetch<TimelineEvent[]>(timelineEventsQuery);
+}
+
+// Lightweight projection — only the fields needed to render a timeline card.
+const projectTimelineProjection = `{
+  _id,
+  title,
+  category,
+  summary,
+  publishedAt,
+  "techStack": techStack,
+  "liveUrl": liveUrl,
+  "repoUrl": repoUrl,
+  "slug": slug.current
+}`;
+
+export const projectTimelineQuery = `*[_type == "project"] | order(publishedAt desc) ${projectTimelineProjection}`;
+
+interface ProjectTimelineData {
+  _id: string;
+  title: string;
+  category: string;
+  summary?: string;
+  publishedAt: string;
+  techStack?: string[];
+  liveUrl?: string;
+  repoUrl?: string;
+  slug: string;
+}
+
+export async function getProjectsAsTimelineEvents(): Promise<TimelineEvent[]> {
+  const projects =
+    await client.fetch<ProjectTimelineData[]>(projectTimelineQuery);
+  return projects.map((p) => {
+    const startDate = p.publishedAt ? p.publishedAt.slice(0, 7) : "";
+    const links: { label: string; url: string }[] = [
+      { label: "Details", url: `/projects/${p.slug}` },
+      ...(p.liveUrl ? [{ label: "Live Site", url: p.liveUrl }] : []),
+      ...(p.repoUrl ? [{ label: "Repository", url: p.repoUrl }] : []),
+    ];
+    return {
+      _id: p._id,
+      type: "project" as const,
+      title: p.title,
+      organization: p.category,
+      startDate,
+      endDate: startDate,
+      description: p.summary ?? "",
+      skills: p.techStack ?? [],
+      links,
+    };
+  });
 }

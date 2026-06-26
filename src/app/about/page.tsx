@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/constants";
 import { SectionDivider } from "@/components/section-divider";
 import { GitHubIcon, LinkedInIcon, EmailIcon } from "@/components/icons";
 import { ContactForm } from "@/components/contact-form";
+import { CareerTimeline } from "@/components/career-timeline";
+import { getProjectsAsTimelineEvents } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "About",
@@ -52,7 +54,8 @@ const techStack = [
   "GROQ",
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const timelineEvents = await getProjectsAsTimelineEvents();
   return (
     <div className="mx-auto max-w-3xl px-6 py-24 md:py-28">
       <script
@@ -122,6 +125,10 @@ export default function AboutPage() {
           ))}
         </div>
       </section>
+
+      <SectionDivider className="my-12" />
+
+      <CareerTimeline initialEvents={timelineEvents} />
 
       <SectionDivider className="my-12" />
 

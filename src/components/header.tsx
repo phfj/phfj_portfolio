@@ -40,9 +40,9 @@ export function Header({ searchItems }: Props) {
 
   const desktopLinkClass = (href: string) =>
     [
-      "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200",
+      "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-300",
       isActive(href)
-        ? "text-[var(--foreground)] after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-4 after:-translate-x-1/2 after:rounded-full after:bg-[var(--accent)]"
+        ? "text-[var(--foreground)] after:absolute after:bottom-0 after:left-1/2 after:h-0.5 after:w-5 after:-translate-x-1/2 after:rounded-full after:bg-[var(--accent)] after:transition-all after:duration-300"
         : "text-[var(--muted)] hover:bg-[var(--muted-bg)] hover:text-[var(--foreground)]",
     ].join(" ");
 
@@ -55,14 +55,14 @@ export function Header({ searchItems }: Props) {
     ].join(" ");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur-sm">
+    <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-gradient-to-b from-[var(--background)] to-[var(--background)]/95 backdrop-blur-md">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <Link
           href="/"
           onClick={close}
           className="text-lg font-semibold tracking-tight text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
         >
-          Paul Holmes
+          phfj
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">

@@ -2,6 +2,7 @@ import { getProjects } from "@/lib/sanity/queries";
 import type { Metadata } from "next";
 import { SectionDivider } from "@/components/section-divider";
 import { FilteredProjectList } from "@/components/filtered-project-list";
+import { FeaturedProjectsIntro } from "@/components/featured-projects-intro";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default async function ProjectsPage() {
         Software projects, open source, talks, and writing.
       </p>
       <SectionDivider className="mt-8 mb-10" />
+      <FeaturedProjectsIntro />
       <FilteredProjectList projects={projects} />
     </div>
   );
