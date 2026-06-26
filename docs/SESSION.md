@@ -1,10 +1,13 @@
 # Session
 
 **Feature:** audit-backlog
-**Active task:** 28 of 34 issues complete
+**Active task:** 34 of 39 issues complete
 **Last compaction:** 2026-06-24
 
-## Completed — 28/34 issues
+## Completed — 34/39 issues
+
+### Portfolio UI Refinement (5/5) ✓
+- #35 ui-tokens, #36 ui-header, #37 ui-hero, #38 ui-cards, #39 ui-projects-intro
 
 ### Immediate (5/5) ✓
 - #9 seo-foundation, #10 wire-seo-fields, #11 a11y-foundation, #12 shared-components, #13 fix-topic-pages
@@ -16,9 +19,10 @@
 - #25 table-of-contents ✓
 - #26 project-card-images ✓
 
-### Nice-to-have (4/6)
+### Nice-to-have (5/6)
 - #29 project-polish ✓
 - #30 social-share ✓
+- #32 interactive-resume ✓
 - #33 react-optimizations ✓
 - #34 misc-polish ✓
 
@@ -26,12 +30,11 @@
 - #27 view-counter (needs Cloudflare KV)
 - #28 interactive-demo (needs external embed)
 - #31 newsletter-archive
-- #32 interactive-resume
 
 ### Status
 - Typecheck: pass ✓
 - Lint: pass ✓
-- Tests: 40/40 pass (from 19) ✓
+- Tests: 46/46 pass ✓
 - Build: 16/16 pages ✓
 
 ### Session delta

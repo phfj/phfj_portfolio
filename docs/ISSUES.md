@@ -61,6 +61,16 @@
 034-misc-polish ─────────┘
 ```
 
+### Portfolio UI Refinement (complete ✓)
+
+```
+035-ui-tokens ──┬── 036-ui-header
+                ├── 037-ui-hero
+                └── 038-ui-cards
+
+039-ui-projects-intro
+```
+
 ## Issue list
 
 ### Original build (complete ✓)
@@ -122,6 +132,16 @@
 | 33 | `react-optimizations` | React.memo on PostCard/ProjectCard, useCallback on handlers, ESLint comment | 12 |
 | 34 | `misc-polish` | Cache-Control headers, font display swap, verify API token scope | None |
 
+### Portfolio UI Refinement (complete ✓)
+
+| # | Slug | Description | Blocked by |
+|---|---|---|---|
+| 35 | `ui-tokens` | Establish Design System Tokens & Accent Colors | None |
+| 36 | `ui-header` | Header Visual Polish & Active Underline Marker | 35 |
+| 37 | `ui-hero` | Homepage Layout Clean-up & Editorial Typographic Hero | 35 |
+| 38 | `ui-cards` | Cards Left-Border Hover Accent & Shadow Treatment | 35 |
+| 39 | `ui-projects-intro` | Projects Page Editorial Framing Component | None |
+
 ## Tracer bullet
 
 Issue `001-tracer-bullet` is the thinnest vertical slice — it cuts through every layer:
@@ -129,8 +149,9 @@ Sanity project → next-sanity client → Topic schema → data fetch at build t
 
 ## Stats
 
-- **Total issues:** 34 (8 complete, 26 open)
-- **Immediate:** 5 open (high impact, low effort)
-- **Short-term:** 11 open (moderate effort, high impact)
-- **Medium-term:** 4 open (higher effort)
-- **Nice-to-have:** 6 open
+- **Total issues:** 39 (31 complete + 5 completed UI issues = 36 complete, 3 open)
+- **Immediate:** 0 open
+- **Short-term:** 0 open
+- **Medium-term:** 2 open
+- **Nice-to-have:** 1 open
+- **Portfolio UI Refinement:** 0 open (5 complete)
