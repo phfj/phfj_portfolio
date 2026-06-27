@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Mock } from "vitest";
-import { onRequest } from "../views";
+import { onRequestGet, onRequestPost } from "../views";
 
 interface KVNamespace {
   get(key: string): Promise<string | null>;
@@ -32,11 +32,24 @@ describe("views slug endpoint", () => {
     };
   });
 
-  it("rejects invalid post slugs", async () => {
+  it("rejects invalid post slugs on GET", async () => {
     const invalidSlugs = ["invalid/slug", "in..valid", "a b", "", "../admin"];
     for (const slug of invalidSlugs) {
-      const res = await onRequest({
+      const res = await onRequestGet({
         request: mockRequest("GET", slug),
+        env: { VIEWS_KV: mockKv as unknown as KVNamespace },
+      });
+      expect(res.status).toBe(400);
+      const data = (await res.json()) as { error: string };
+      expect(data.error).toBe("Invalid post slug");
+    }
+  });
+
+  it("rejects invalid post slugs on POST", async () => {
+    const invalidSlugs = ["invalid/slug", "in..valid", "a b", "", "../admin"];
+    for (const slug of invalidSlugs) {
+      const res = await onRequestPost({
+        request: mockRequest("POST", slug),
         env: { VIEWS_KV: mockKv as unknown as KVNamespace },
       });
       expect(res.status).toBe(400);
@@ -48,7 +61,7 @@ describe("views slug endpoint", () => {
   it("returns 0 views if key is not found in KV (GET)", async () => {
     mockKv.get.mockResolvedValueOnce(null);
 
-    const res = await onRequest({
+    const res = await onRequestGet({
       request: mockRequest("GET", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
@@ -62,7 +75,7 @@ describe("views slug endpoint", () => {
   it("returns views count from KV (GET)", async () => {
     mockKv.get.mockResolvedValueOnce("42");
 
-    const res = await onRequest({
+    const res = await onRequestGet({
       request: mockRequest("GET", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
@@ -76,7 +89,7 @@ describe("views slug endpoint", () => {
     mockKv.get.mockResolvedValueOnce(null);
     mockKv.put.mockResolvedValueOnce(undefined);
 
-    const res = await onRequest({
+    const res = await onRequestPost({
       request: mockRequest("POST", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
@@ -91,7 +104,7 @@ describe("views slug endpoint", () => {
     mockKv.get.mockResolvedValueOnce("10");
     mockKv.put.mockResolvedValueOnce(undefined);
 
-    const res = await onRequest({
+    const res = await onRequestPost({
       request: mockRequest("POST", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
@@ -104,7 +117,7 @@ describe("views slug endpoint", () => {
 
   it("falls back to local memory cache when VIEWS_KV is missing", async () => {
     // First, fetch view count (should be 0)
-    const resGet = await onRequest({
+    const resGet = await onRequestGet({
       request: mockRequest("GET", "local-post"),
       env: {},
     });
@@ -112,7 +125,7 @@ describe("views slug endpoint", () => {
     expect((await resGet.json()) as { views: number }).toEqual({ views: 0 });
 
     // Next, increment view count (should be 1)
-    const resPost = await onRequest({
+    const resPost = await onRequestPost({
       request: mockRequest("POST", "local-post"),
       env: {},
     });
@@ -120,19 +133,11 @@ describe("views slug endpoint", () => {
     expect((await resPost.json()) as { views: number }).toEqual({ views: 1 });
 
     // Fetch again (should be 1)
-    const resGet2 = await onRequest({
+    const resGet2 = await onRequestGet({
       request: mockRequest("GET", "local-post"),
       env: {},
     });
     expect(resGet2.status).toBe(200);
     expect((await resGet2.json()) as { views: number }).toEqual({ views: 1 });
-  });
-
-  it("rejects unsupported HTTP methods", async () => {
-    const res = await onRequest({
-      request: mockRequest("PUT", "test-post"),
-      env: {},
-    });
-    expect(res.status).toBe(405);
   });
 });

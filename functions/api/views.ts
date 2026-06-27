@@ -12,7 +12,7 @@ const localCache = new Map<string, number>();
 
 const SLUG_REGEX = /^[a-zA-Z0-9-_]+$/;
 
-export async function onRequest(context: {
+async function handleViews(context: {
   request: Request;
   env: Env;
 }): Promise<Response> {
@@ -63,4 +63,18 @@ export async function onRequest(context: {
       err instanceof Error ? err.message : "Internal Server Error";
     return Response.json({ error: message }, { status: 500 });
   }
+}
+
+export async function onRequestGet(context: {
+  request: Request;
+  env: Env;
+}): Promise<Response> {
+  return handleViews(context);
+}
+
+export async function onRequestPost(context: {
+  request: Request;
+  env: Env;
+}): Promise<Response> {
+  return handleViews(context);
 }
