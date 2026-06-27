@@ -149,9 +149,9 @@ Sanity project → next-sanity client → Topic schema → data fetch at build t
 
 ## Stats
 
-- **Total issues:** 39 (31 complete + 5 completed UI issues = 36 complete, 3 open)
+- **Total issues:** 39 (32 complete + 5 completed UI issues = 37 complete, 2 open)
 - **Immediate:** 0 open
 - **Short-term:** 0 open
-- **Medium-term:** 2 open
+- **Medium-term:** 1 open
 - **Nice-to-have:** 1 open
 - **Portfolio UI Refinement:** 0 open (5 complete)

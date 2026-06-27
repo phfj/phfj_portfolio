@@ -17,6 +17,7 @@ import { SITE_URL } from "@/lib/constants";
 import { ReadingProgress } from "@/components/reading-progress";
 import { TableOfContents } from "@/components/table-of-contents";
 import { ShareButtons } from "@/components/share-buttons";
+import { ViewCounter } from "@/components/view-counter";
 
 export const dynamic = "force-static";
 
@@ -150,6 +151,7 @@ export default async function PostPage({ params }: Props) {
               {readingTime !== null && (
                 <span>&middot; {readingTime} min read</span>
               )}
+              <ViewCounter slug={slug} track={true} />
             </div>
 
             <h1 className="mt-2 text-4xl font-bold tracking-tight">

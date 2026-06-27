@@ -1,10 +1,10 @@
 # Session
 
 **Feature:** audit-backlog
-**Active task:** 34 of 39 issues complete
+**Active task:** 35 of 39 issues complete
 **Last compaction:** 2026-06-24
 
-## Completed — 34/39 issues
+## Completed — 35/39 issues
 
 ### Portfolio UI Refinement (5/5) ✓
 - #35 ui-tokens, #36 ui-header, #37 ui-hero, #38 ui-cards, #39 ui-projects-intro
@@ -15,9 +15,10 @@
 ### Short-term (11/11) ✓
 - #14 code-syntax-highlight, #15 loading-error-states, #16 pagination, #17 image-optimization, #18 project-filtering, #19 search, #20 test-coverage, #21 github-api, #22 reading-progress-bar, #23 contact-form, #24 about-redesign
 
-### Medium-term (2/4)
+### Medium-term (3/4)
 - #25 table-of-contents ✓
 - #26 project-card-images ✓
+- #27 view-counter ✓
 
 ### Nice-to-have (5/6)
 - #29 project-polish ✓
@@ -27,7 +28,6 @@
 - #34 misc-polish ✓
 
 ### Remaining
-- #27 view-counter (needs Cloudflare KV)
 - #28 interactive-demo (needs external embed)
 - #31 newsletter-archive
 
