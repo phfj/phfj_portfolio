@@ -14,11 +14,12 @@ const SLUG_REGEX = /^[a-zA-Z0-9-_]+$/;
 
 export async function onRequest(context: {
   request: Request;
-  params: { slug: string };
   env: Env;
 }): Promise<Response> {
-  const { request, params, env } = context;
-  const slug = params.slug;
+  const { request, env } = context;
+
+  const url = new URL(request.url);
+  const slug = url.searchParams.get("slug");
 
   if (!slug || !SLUG_REGEX.test(slug)) {
     return Response.json({ error: "Invalid post slug" }, { status: 400 });
