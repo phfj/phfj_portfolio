@@ -17,7 +17,7 @@ export function ViewCounter({ slug, track = false }: ViewCounterProps) {
       const storageKey = `dev:views:${slug}`;
 
       try {
-        const response = await fetch(`/api/views/${slug}`, {
+        const response = await fetch(`/api/views?slug=${slug}`, {
           method: track ? "POST" : "GET",
         });
 

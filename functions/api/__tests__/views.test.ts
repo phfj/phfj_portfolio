@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { Mock } from "vitest";
-import { onRequest } from "../views/[slug]";
+import { onRequest } from "../views";
 
 interface KVNamespace {
   get(key: string): Promise<string | null>;
@@ -8,12 +8,15 @@ interface KVNamespace {
 }
 
 interface MockKV {
-  get: Mock<[string], Promise<string | null>>;
-  put: Mock<[string, string], Promise<void>>;
+  get: Mock<(key: string) => Promise<string | null>>;
+  put: Mock<(key: string, value: string) => Promise<void>>;
 }
 
-function mockRequest(method: string): Request {
-  return new Request(`https://example.com/api/views/test-post`, {
+function mockRequest(method: string, slug?: string): Request {
+  const url = slug
+    ? `https://example.com/api/views?slug=${slug}`
+    : `https://example.com/api/views`;
+  return new Request(url, {
     method,
   });
 }
@@ -33,8 +36,7 @@ describe("views slug endpoint", () => {
     const invalidSlugs = ["invalid/slug", "in..valid", "a b", "", "../admin"];
     for (const slug of invalidSlugs) {
       const res = await onRequest({
-        request: mockRequest("GET"),
-        params: { slug },
+        request: mockRequest("GET", slug),
         env: { VIEWS_KV: mockKv as unknown as KVNamespace },
       });
       expect(res.status).toBe(400);
@@ -47,8 +49,7 @@ describe("views slug endpoint", () => {
     mockKv.get.mockResolvedValueOnce(null);
 
     const res = await onRequest({
-      request: mockRequest("GET"),
-      params: { slug: "my-first-post" },
+      request: mockRequest("GET", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
 
@@ -62,8 +63,7 @@ describe("views slug endpoint", () => {
     mockKv.get.mockResolvedValueOnce("42");
 
     const res = await onRequest({
-      request: mockRequest("GET"),
-      params: { slug: "my-first-post" },
+      request: mockRequest("GET", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
 
@@ -77,8 +77,7 @@ describe("views slug endpoint", () => {
     mockKv.put.mockResolvedValueOnce(undefined);
 
     const res = await onRequest({
-      request: mockRequest("POST"),
-      params: { slug: "my-first-post" },
+      request: mockRequest("POST", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
 
@@ -93,8 +92,7 @@ describe("views slug endpoint", () => {
     mockKv.put.mockResolvedValueOnce(undefined);
 
     const res = await onRequest({
-      request: mockRequest("POST"),
-      params: { slug: "my-first-post" },
+      request: mockRequest("POST", "my-first-post"),
       env: { VIEWS_KV: mockKv as unknown as KVNamespace },
     });
 
@@ -107,8 +105,7 @@ describe("views slug endpoint", () => {
   it("falls back to local memory cache when VIEWS_KV is missing", async () => {
     // First, fetch view count (should be 0)
     const resGet = await onRequest({
-      request: mockRequest("GET"),
-      params: { slug: "local-post" },
+      request: mockRequest("GET", "local-post"),
       env: {},
     });
     expect(resGet.status).toBe(200);
@@ -116,8 +113,7 @@ describe("views slug endpoint", () => {
 
     // Next, increment view count (should be 1)
     const resPost = await onRequest({
-      request: mockRequest("POST"),
-      params: { slug: "local-post" },
+      request: mockRequest("POST", "local-post"),
       env: {},
     });
     expect(resPost.status).toBe(200);
@@ -125,8 +121,7 @@ describe("views slug endpoint", () => {
 
     // Fetch again (should be 1)
     const resGet2 = await onRequest({
-      request: mockRequest("GET"),
-      params: { slug: "local-post" },
+      request: mockRequest("GET", "local-post"),
       env: {},
     });
     expect(resGet2.status).toBe(200);
@@ -135,8 +130,7 @@ describe("views slug endpoint", () => {
 
   it("rejects unsupported HTTP methods", async () => {
     const res = await onRequest({
-      request: mockRequest("PUT"),
-      params: { slug: "test-post" },
+      request: mockRequest("PUT", "test-post"),
       env: {},
     });
     expect(res.status).toBe(405);
