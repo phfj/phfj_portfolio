@@ -26,7 +26,13 @@ export function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, subject, message }),
       });
-      const data = (await res.json()) as { message?: string; error?: string };
+
+      let data: { message?: string; error?: string } = {};
+      try {
+        data = (await res.json()) as { message?: string; error?: string };
+      } catch {
+        // Response is not JSON
+      }
 
       if (res.ok) {
         setStatus("success");
@@ -37,7 +43,9 @@ export function ContactForm() {
         setMessage("");
       } else {
         setStatus("error");
-        setResponse(data.error ?? "Something went wrong.");
+        setResponse(
+          data.error ?? `Something went wrong (Status ${res.status}).`,
+        );
       }
     } catch {
       setStatus("error");

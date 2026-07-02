@@ -1,79 +1,103 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import { BUTTONDOWN_EMBED_ACTION } from "@/lib/constants";
+
+const SUCCESS_MESSAGE = "Check your inbox to confirm your subscription.";
+const UNCONFIGURED_MESSAGE =
+  "Newsletter signup is not configured yet. Add your Buttondown username to continue.";
 
 export function SubscribeForm() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState("");
+  const submittedRef = useRef(false);
+  const isConfigured = Boolean(BUTTONDOWN_EMBED_ACTION);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!email.trim()) return;
-
-    setStatus("loading");
-    setMessage("");
-
-    try {
-      const res = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      const data = (await res.json()) as { message?: string; error?: string };
-
-      if (res.ok) {
-        setStatus("success");
-        setMessage(data.message ?? "Check your inbox to confirm.");
-        setEmail("");
-      } else {
-        setStatus("error");
-        setMessage(data.error ?? "Something went wrong.");
-      }
-    } catch {
-      setStatus("error");
-      setMessage("Network error. Try again later.");
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    if (!isConfigured) {
+      e.preventDefault();
+      setMessage(UNCONFIGURED_MESSAGE);
+      return;
     }
+
+    if (!email.trim()) {
+      e.preventDefault();
+      return;
+    }
+
+    submittedRef.current = true;
+    setIsSubmitting(true);
+    setMessage("");
+  }
+
+  function handleFrameLoad() {
+    if (!submittedRef.current) return;
+
+    submittedRef.current = false;
+    setIsSubmitting(false);
+    setMessage(SUCCESS_MESSAGE);
+    setEmail("");
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <div className="flex gap-2">
-        <div className="flex-1">
-          <label htmlFor="subscribe-email" className="sr-only">
-            Email address
-          </label>
-          <input
-            id="subscribe-email"
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={status === "loading"}
-            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none disabled:opacity-50"
-          />
+    <>
+      <form
+        action={BUTTONDOWN_EMBED_ACTION || undefined}
+        method="post"
+        target="buttondown-embed-frame"
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-3"
+      >
+        <input type="hidden" name="embed" value="1" />
+
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <label htmlFor="subscribe-email" className="sr-only">
+              Email address
+            </label>
+            <input
+              id="subscribe-email"
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (message) setMessage("");
+              }}
+              required
+              disabled={isSubmitting}
+              className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)] focus:outline-none disabled:opacity-50"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={isSubmitting || !isConfigured}
+            className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
+          >
+            {isSubmitting ? "Submitting..." : "Subscribe"}
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)] disabled:opacity-50"
-        >
-          {status === "loading" ? "Subscribing..." : "Subscribe"}
-        </button>
-      </div>
-      {message && (
-        <p
-          role="status"
-          aria-live="polite"
-          className={`text-sm ${status === "error" ? "text-red-500" : "text-[var(--foreground)]"}`}
-        >
-          {message}
-        </p>
-      )}
-    </form>
+
+        {message && (
+          <p
+            role="status"
+            aria-live="polite"
+            className="text-sm text-[var(--foreground)]"
+          >
+            {message}
+          </p>
+        )}
+      </form>
+
+      <iframe
+        title="Buttondown subscription response"
+        name="buttondown-embed-frame"
+        className="hidden"
+        onLoad={handleFrameLoad}
+      />
+    </>
   );
 }
