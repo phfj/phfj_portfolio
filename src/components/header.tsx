@@ -60,9 +60,9 @@ export function Header({ searchItems }: Props) {
         <Link
           href="/"
           onClick={close}
-          className="text-lg font-semibold tracking-tight text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
+          className="font-mono text-lg font-bold tracking-tight text-[var(--foreground)] transition-colors hover:text-[var(--accent)]"
         >
-          phfj
+          &lt;phfj/&gt;
         </Link>
 
         <ul className="hidden items-center gap-1 md:flex">
