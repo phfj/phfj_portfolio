@@ -173,7 +173,7 @@ export default async function PostPage({ params }: Props) {
             )}
 
             {post.summary && (
-              <p className="mt-4 text-lg leading-relaxed text-[var(--muted)]">
+              <p className="mt-5 border-l-2 border-[var(--border)] pl-4 font-serif text-xl leading-[1.8] text-[var(--muted)] italic">
                 {post.summary}
               </p>
             )}

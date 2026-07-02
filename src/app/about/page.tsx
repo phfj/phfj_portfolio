@@ -57,16 +57,24 @@ const techStack = [
 export default async function AboutPage() {
   const timelineEvents = await getProjectsAsTimelineEvents();
   return (
-    <div className="mx-auto max-w-3xl px-6 py-24 md:py-28">
+    <div className="relative mx-auto max-w-3xl overflow-hidden px-6 py-24 md:py-28">
+      {/* Decorative ambient background glows */}
+      <div className="pointer-events-none absolute -top-10 left-10 -z-10 h-72 w-72 rounded-full bg-[var(--accent)]/10 opacity-60 blur-3xl" />
+      <div className="pointer-events-none absolute top-40 right-10 -z-10 h-72 w-72 rounded-full bg-[var(--accent-blue)]/5 opacity-40 blur-3xl" />
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="flex flex-col items-start gap-8 sm:flex-row">
+      <div className="relative z-10 flex flex-col items-start gap-8 sm:flex-row">
         <div className="shrink-0">
-          <div className="flex h-28 w-28 items-center justify-center rounded-2xl bg-[var(--accent)] text-4xl font-bold text-white">
-            PH
+          <div className="group relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--muted-bg)] to-[var(--background)] shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-[var(--shadow-card-hover)]">
+            {/* Soft inner glow on hover */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/0 to-[var(--accent)]/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="font-mono text-2xl font-bold text-[var(--accent)] transition-all duration-300 group-hover:scale-110 group-hover:text-[var(--foreground)]">
+              &lt;phfj/&gt;
+            </span>
           </div>
         </div>
         <div className="flex-1">
@@ -80,15 +88,21 @@ export default async function AboutPage() {
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/projects"
-              className="rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
+              className="group flex items-center gap-1.5 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:bg-[var(--accent-hover)] hover:shadow-[var(--accent)]/10 hover:shadow-lg"
             >
               View my work
+              <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
             </Link>
             <a
               href="#contact"
-              className="rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-[var(--muted-bg)]"
+              className="group flex items-center gap-1.5 rounded-lg border border-[var(--border)] px-5 py-2.5 text-sm font-medium transition-all duration-300 hover:border-[var(--muted)]/30 hover:bg-[var(--muted-bg)]"
             >
               Get in touch
+              <span className="inline-block transition-transform duration-300 group-hover:translate-y-0.5">
+                ↓
+              </span>
             </a>
           </div>
         </div>
@@ -118,7 +132,7 @@ export default async function AboutPage() {
           {techStack.map((tech) => (
             <span
               key={tech}
-              className="rounded-lg border border-[var(--border)] bg-[var(--muted-bg)] px-3 py-1.5 text-sm text-[var(--muted)]"
+              className="cursor-default rounded-lg border border-[var(--border)] bg-[var(--muted-bg)] px-3 py-1.5 text-sm text-[var(--muted)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-[var(--background)] hover:text-[var(--foreground)] hover:shadow-[var(--shadow-card)]"
             >
               {tech}
             </span>
@@ -132,30 +146,33 @@ export default async function AboutPage() {
 
       <SectionDivider className="my-12" />
 
-      <section className="flex flex-wrap items-center gap-6">
+      <section className="flex flex-wrap items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--muted-bg)]/50 p-4 shadow-sm">
+        <span className="mr-2 text-sm font-medium text-[var(--muted)]">
+          Find me on:
+        </span>
         <a
           href="https://github.com/phfj"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+          className="group inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2 text-sm font-medium text-[var(--muted)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--foreground)]"
         >
-          <GitHubIcon />
+          <GitHubIcon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
           GitHub
         </a>
         <a
           href="https://www.linkedin.com/in/paul-holmes-10a98424a/"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+          className="group inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2 text-sm font-medium text-[var(--muted)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--foreground)]"
         >
-          <LinkedInIcon />
+          <LinkedInIcon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
           LinkedIn
         </a>
         <a
           href="mailto:pauladrianoholmes@gmail.com"
-          className="inline-flex items-center gap-2 text-[var(--muted)] transition-colors hover:text-[var(--accent)]"
+          className="group inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--background)] px-4 py-2 text-sm font-medium text-[var(--muted)] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:text-[var(--foreground)]"
         >
-          <EmailIcon />
+          <EmailIcon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
           Email
         </a>
       </section>

@@ -63,10 +63,12 @@ const components: PortableTextComponents = {
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="my-2 leading-relaxed text-[var(--muted)]">{children}</p>
+      <p className="my-5 font-serif text-[1.125rem] leading-[1.8] text-[var(--foreground)]/95">
+        {children}
+      </p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-6 border-l-4 border-[var(--accent)] bg-[var(--muted-bg)] px-6 py-4 text-[var(--muted)] italic">
+      <blockquote className="my-7 rounded-r-lg border-l-4 border-[var(--accent)] bg-[var(--muted-bg)] px-6 py-4.5 font-serif text-[1.125rem] leading-[1.8] text-[var(--muted)] italic">
         {children}
       </blockquote>
     ),
@@ -171,12 +173,12 @@ const components: PortableTextComponents = {
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="my-4 ml-6 list-disc space-y-1 text-[var(--muted)]">
+      <ul className="my-5 ml-6 list-disc space-y-2 font-serif text-[1.125rem] leading-[1.8] text-[var(--foreground)]/95">
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="my-4 ml-6 list-decimal space-y-1 text-[var(--muted)]">
+      <ol className="my-5 ml-6 list-decimal space-y-2 font-serif text-[1.125rem] leading-[1.8] text-[var(--foreground)]/95">
         {children}
       </ol>
     ),
